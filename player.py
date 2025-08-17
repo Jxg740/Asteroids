@@ -18,7 +18,9 @@ class Player(CircleShape) :
         c = self.position - forward * self.radius + right
         return [a, b, c]
 
+    # overwrites the default draw() from circlshape
     def draw(self, screen):
+        # args are (surface, color, points, width) points calls the info from the triangle method
         pygame.draw.polygon(screen, "white", self.triangle(), width=2)
 
     def rotate(self, dt):
