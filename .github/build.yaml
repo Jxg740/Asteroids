@@ -1,13 +1,16 @@
-name: Build Game Executable
+name: Build Game Executables
 
 on:
   push:
-    branches: [ "main" ]   # or "master", adjust if needed
-  workflow_dispatch:       # allows manual trigger
+    branches: [ "main" ]   # adjust if your default branch is different
+  workflow_dispatch:
 
 jobs:
-  build-windows:
-    runs-on: windows-latest
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Checkout repo
@@ -26,10 +29,11 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile --windowed your_game.py
+          pyinstaller --onefile --windowed main.py
 
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: game-exe
-          path: dist/your_game.exe
+          name: game-${{ matrix.os }}
+          path: dist/*
+
